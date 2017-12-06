@@ -1,0 +1,172 @@
+<html>
+<head>
+<title>Assignment 2 - An Clickable Product Categroy</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+<link rel="stylesheet" href="jquery-treeview/jquery.treeview.css" />
+<link rel="stylesheet" href="jquery-treeview/demo/screen.css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="jquery-treeview/demo/jquery.cookie.js"></script>
+<script src="jquery-treeview/jquery.treeview.js"></script>
+
+
+<script type="text/javascript">
+categorieslist();
+	$(document).ready(function(){
+		$("#rightlist").treeview({
+			toggle: function() {
+				console.log("%s was toggled.", $(this).find(">span").text());
+			}
+		});
+	});
+
+	var categoriesArray= new Array;
+	var productsArray= new Array;
+    function categorieslist(){
+		var xmlhttpx = new XMLHttpRequest();
+		var xmlhttpy = new XMLHttpRequest();
+		xmlhttpx.open("GET", "products.xml", true);
+		xmlhttpx.send();
+		xmlhttpy.open("GET", "categories.xml", true);
+		xmlhttpy.send();
+        xmlhttpx.onreadystatechange = function(xmlc){
+            if (this.readyState == 4 && this.status == 200){
+          
+				
+				var xmlcategories = xmlhttpx.responseXML;
+				categoriesArray = xmlcategories.getElementsByTagName("Categories");
+				
+				xmlhttpy.onreadystatechange = function(){
+				if (this.readyState == 4 && this.status == 200){
+					
+					var xmlproducts = xmlhttpy.responseXML;
+					productsArray = xmlproducts.getElementsByTagName("Products");
+					
+					tabledisplay();
+				
+				
+					}	
+				}	
+				
+            }
+        }
+        
+    }
+	
+	
+	
+	function tabledisplay()
+	{
+		var table = '<ul>';
+		table += '<li><span class="folder">Products List</span>';
+		table += '<ul>';
+		alert ("aaaaaaaaaaaaaa");
+        /*treeData += '[{"text": "Product List", "children" : [';*/
+              
+                for (i = 0; i < categoriesArray.length; i++) {
+                    var categorieseID  = categoriesArray[i].getElementsByTagName("CategoryID")[0].firstChild.nodeValue;
+                    var categoriesname = categoriesArray[i].getElementsByTagName("CategoryName")[0].firstChild.nodeValue;
+                    var categoriesdiscription = categoriesArray[i].getElementsByTagName("Description")[0].firstChild.nodeValue;
+                    
+					alert(categorieseID,categoriesname,categoriesdiscription);
+					
+                    table += '<li><span class="folder">'+categoriesname+'</span>';
+                    table += '<ul>';
+                    
+                    
+                   // treeData += '{"text": "'+catName+'", "state": "closed", "attributes": {"descp": " Description: '+catDscp+'"}, "children" : [';
+                    
+                    
+                    
+                    for (j = 0; j < productsArray.length; j++) {
+                        var subcategorieseID = productsArray[j].getElementsByTagName("CategoryID")[0].firstChild.nodeValue;
+                        if(subcategorieseID == categorieseID){
+                            var productsname = productsArray[j].getElementsByTagName("ProductName")[0].firstChild.nodeValue;
+                            var productsquantity = productsArray[j].getElementsByTagName("QuantityPerUnit")[0].firstChild.nodeValue;
+                            var productsprice= productsArray[j].getElementsByTagName("UnitPrice")[0].firstChild.nodeValue;
+                            
+                            table += '<li onclick="javascript: alert(\'Quantity Per Unit: '+productsquantity+' \\nUnit Price: '+productsprice+'\');">';
+							table += '<span class="file">'+productsname+'</span>';
+                            table += '</li>';
+							
+                            
+                            /*treeData += '{"text": "'+prodName+'", "attributes": {"descp": "Quantity Per Unit: '+prodQnty+' <br/>Unit Price: '+prodUnPr+'"}},';*/
+                        }
+                    }
+					table += '</ul>';
+                    table += '</li>';
+                    /*treeData = treeData.replace(/,\s*$/, "") +  ']},';*/
+                }
+                
+                table += '</ul>';
+				table += '</li>';
+				table += '</ul>';
+                /*treeData = treeData.replace(/,\s*$/, "") +  ']}]';*/
+				
+				document.getElementById("left").innerHTML = table;
+	
+	
+	}
+	
+	
+</script>
+</head>
+
+
+
+
+<body >
+	<h1 id="banner">Shuai Li Assignment 2</h1>
+	<!---<div style="float:left; width:30%;"></div>?????-->
+	<div id="left" style="float:left; width:30%;">
+	
+	</div>
+	<div id="main" style="float:right; width:30%;">
+	
+	<ul id="rightlist" class="filetree treeview-famfamfam">
+		<li><span class="folder">Products List</span>
+			<ul>
+				<li><span class="folder">Beverages</span>
+					<ul>
+						<li><span class="file">Chai</span></li>
+						<li><span class="file">Chang</span></li>
+					</ul>
+				</li>
+				<li><span class="folder">Condiments</span>
+					<ul>
+						<li><span class="file">Ainseed Syrup</span></li>
+						<li><span class="file">Chef Anton's Cajun Seasoning</span></li>
+						<li><span class="file">Chef Anton's Gumbo Mix</span></li>
+						<li><span class="file">Chef Anton's Gumbo</span></li>
+					</ul>
+				</li>
+				<li><span class="folder">Confictions</span></li>
+				<li><span class="folder">Dairy Products</span></li>
+				<li><span class="folder">Grains/Cereals</span>
+					<ul>
+						<li><span class="file">hamburger bun</span></li>
+						<li><span class="file">turkish bread</span></li>
+						<li><span class="file">bread roll</span></li>
+					</ul>
+				</li>
+				<li><span class="folder">Meat/Poultry</span>
+					<ul>
+						<li><span class="file">beef burger</span></li>
+						<li><span class="file">chicken burger</span></li>
+					</ul>
+				</li>
+				<li><span class="folder">Produce</span>
+				<li><span class="folder">Seafood</span>
+					<ul>
+						<li><span class="file">tiger prawns</span></li>
+						<li><span class="file">cooked prawns</span></li>
+					</ul>
+				</li>
+				
+			</ul>
+		</li>
+	</ul>
+</div>
+</body>
+</html>
